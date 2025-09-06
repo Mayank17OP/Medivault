@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediVault - Secure Medical Records</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #2639ED;
+            --accent-lavender: #A78BFA;
+            --accent-mint: #6EE7B7;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F8FAFC;
+        }
+
+        .glass-form {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .glow-button {
+            box-shadow: 0 0 15px rgba(38, 57, 237, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .glow-button:hover {
+            box-shadow: 0 0 25px rgba(38, 57, 237, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .input-field {
+            transition: all 0.3s ease;
+            border: 1px solid #E2E8F0;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(38, 57, 237, 0.1);
+        }
+
+        .toggle-radio input:checked+span {
+            background-color: var(--primary-blue);
+            border-color: var(--primary-blue);
+        }
+
+        .toggle-radio input:checked+span:after {
+            transform: translateX(100%);
+            background-color: white;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .illustration-container {
+            perspective: 1000px;
+        }
+
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(2deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        .floating-delay-1 {
+            animation-delay: 1s;
+        }
+
+        .floating-delay-2 {
+            animation-delay: 2s;
+        }
+
+        .floating-delay-3 {
+            animation-delay: 3s;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.8;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.8;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-6xl w-full bg-white rounded-2xl overflow-hidden shadow-xl flex flex-col md:flex-row">
+        <!-- Left Section - Illustration -->
+        <div
+            class="w-full md:w-1/2 bg-gradient-to-br from-blue-500 to-indigo-600 p-8 md:p-12 flex items-center justify-center illustration-container">
+            <div class="relative w-full h-64 md:h-auto">
+                <!-- Floating health icons -->
+                <div class="absolute top-1/4 left-1/4 floating">
+                    <div class="bg-white bg-opacity-20 rounded-full p-4 shadow-lg">
+                        <i class="fas fa-heartbeat text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <div class="absolute top-1/3 right-1/4 floating floating-delay-1">
+                    <div class="bg-white bg-opacity-20 rounded-full p-4 shadow-lg">
+                        <i class="fas fa-pills text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-1/4 left-1/3 floating floating-delay-2">
+                    <div class="bg-white bg-opacity-20 rounded-full p-4 shadow-lg">
+                        <i class="fas fa-dna text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <div class="absolute top-1/4 right-1/3 floating floating-delay-3">
+                    <div class="bg-white bg-opacity-20 rounded-full p-4 shadow-lg">
+                        <i class="fas fa-stethoscope text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <!-- Main vault illustration -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="relative">
+                        <div
+                            class="w-48 h-48 md:w-64 md:h-64 bg-white bg-opacity-10 rounded-2xl shadow-2xl flex items-center justify-center mx-auto pulse">
+                            <i class="fas fa-shield-alt text-white text-6xl md:text-8xl"></i>
+                        </div>
+                        <div class="absolute -bottom-6 left-0 right-0 text-center">
+                            <div class="inline-block bg-white bg-opacity-30 px-4 py-2 rounded-full">
+                                <i class="fas fa-lock text-white mr-2"></i>
+                                <span class="text-white font-medium">Blockchain Secured</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-8 left-0 right-0 text-center">
+                    <h3 class="text-white text-xl md:text-2xl font-bold mb-2">Your Health Data, Secured</h3>
+                    <p class="text-white text-opacity-80 max-w-md mx-auto">AI-powered insights with military-grade
+                        encryption for your medical records.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section - Form -->
+        <div class="w-full md:w-1/2 p-8 md:p-12 flex items-center justify-center">
+            <div class="glass-form w-full max-w-md p-8 rounded-2xl fade-in">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Create Your MediVault Account</h2>
+                    <p class="text-gray-600">Access a secure vault for your health data — powered by AI and blockchain.
+                    </p>
+                </div>
+
+                <form id="signupForm" class="space-y-6">
+                    <!-- Full Name -->
+                    <div>
+                        <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-user text-gray-400"></i>
+                            </div>
+                            <input type="text" id="fullName" name="fullName" required
+                                class="input-field pl-10 w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-gray-400"></i>
+                            </div>
+                            <input type="email" id="email" name="email" required
+                                class="input-field pl-10 w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <input type="password" id="password" name="password" required
+                                class="input-field pl-10 w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <button type="button"
+                                    class="text-gray-400 hover:text-gray-600 focus:outline-none toggle-password">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">Minimum 8 characters with at least one number</div>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div>
+                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm
+                            Password</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required
+                                class="input-field pl-10 w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <button type="button"
+                                    class="text-gray-400 hover:text-gray-600 focus:outline-none toggle-password">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="passwordMatchError" class="text-xs text-red-500 mt-1 hidden">Passwords don't match
+                        </div>
+                    </div>
+
+                    <!-- Account Type Toggle -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Signing up as:</label>
+                        <div class="flex space-x-4">
+                            <label class="flex-1">
+                                <input type="radio" name="accountType" value="patient" class="sr-only peer" checked>
+                                <div
+                                    class="flex items-center justify-center p-3 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-600 transition-all">
+                                    <i class="fas fa-user-injured mr-2"></i>
+                                    <span>Patient</span>
+                                </div>
+                            </label>
+                            <label class="flex-1">
+                                <input type="radio" name="accountType" value="doctor" class="sr-only peer">
+                                <div
+                                    class="flex items-center justify-center p-3 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-600 transition-all">
+                                    <i class="fas fa-user-md mr-2"></i>
+                                    <span>Doctor</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Doctor License Field (hidden by default) -->
+                    <div id="doctorLicenseField" class="hidden">
+                        <label for="licenseNumber" class="block text-sm font-medium text-gray-700 mb-1">Medical License
+                            Number</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-id-card text-gray-400"></i>
+                            </div>
+                            <input type="text" id="licenseNumber" name="licenseNumber"
+                                class="input-field pl-10 w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        </div>
+                    </div>
+
+                    <!-- Terms Checkbox -->
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="terms" name="terms" type="checkbox" required
+                                class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="terms" class="font-medium text-gray-700">I agree to the <a href="#"
+                                    class="text-blue-600 hover:underline">Terms & Privacy Policy</a></label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                        class="glow-button w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-300 flex items-center justify-center">
+                        <i class="fas fa-lock mr-2"></i>
+                        Create Account Securely
+                    </button>
+
+                    <!-- OAuth Divider -->
+                    <div class="flex items-center my-6">
+                        <div class="flex-1 border-t border-gray-300"></div>
+                        <span class="px-3 text-sm text-gray-500 bg-white">or</span>
+                        <div class="flex-1 border-t border-gray-300"></div>
+                    </div>
+
+                    <!-- Google OAuth Button -->
+                    <button type="button" id="googleSignUpBtn"
+                        class="w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-50 transition duration-200 flex items-center justify-center shadow-sm">
+                        <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Sign up with Google
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="relative mt-6">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500">Already have an account?</span>
+                        </div>
+                    </div>
+
+                    <!-- Login Button -->
+                    <div class="text-center">
+                        <a href="#"
+                            class="inline-flex items-center px-4 py-2 border border-blue-500 text-blue-500 rounded-lg font-medium hover:bg-blue-50 transition-all hover:shadow-sm">
+                            Log In
+                        </a>
+                    </div>
+
+                    <!-- Security Badge -->
+                    <div class="mt-6 text-center">
+                        <div
+                            class="inline-flex items-center text-xs text-gray-500 bg-gray-100 px-3 py-1.5 rounded-full">
+                            <i class="fas fa-shield-alt text-blue-500 mr-1.5"></i>
+                            <span>HIPAA & GDPR Compliant</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="medivault-api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Toggle password visibility
+            const togglePasswordButtons = document.querySelectorAll('.toggle-password');
+            togglePasswordButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const input = this.parentElement.previousElementSibling;
+                    const icon = this.querySelector('i');
+
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.replace('fa-eye', 'fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.replace('fa-eye-slash', 'fa-eye');
+                    }
+                });
+            });
+
+            // Show/hide doctor license field based on account type
+            const accountTypeRadios = document.querySelectorAll('input[name="accountType"]');
+            const doctorLicenseField = document.getElementById('doctorLicenseField');
+
+            accountTypeRadios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    if (this.value === 'doctor') {
+                        doctorLicenseField.classList.remove('hidden');
+                        document.getElementById('licenseNumber').required = true;
+                    } else {
+                        doctorLicenseField.classList.add('hidden');
+                        document.getElementById('licenseNumber').required = false;
+                    }
+                });
+            });
+
+            // Password match validation
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const passwordMatchError = document.getElementById('passwordMatchError');
+
+            function validatePasswordMatch() {
+                if (passwordInput.value !== confirmPasswordInput.value) {
+                    passwordMatchError.classList.remove('hidden');
+                    confirmPasswordInput.classList.add('border-red-500');
+                    confirmPasswordInput.classList.remove('border-gray-300');
+                } else {
+                    passwordMatchError.classList.add('hidden');
+                    confirmPasswordInput.classList.remove('border-red-500');
+                    confirmPasswordInput.classList.add('border-gray-300');
+                }
+            }
+
+            passwordInput.addEventListener('input', validatePasswordMatch);
+            confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+
+            // Form submission with backend API
+            const signupForm = document.getElementById('signupForm');
+            signupForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating Account...';
+                submitBtn.disabled = true;
+
+                try {
+                    // Validate passwords match
+                    if (passwordInput.value !== confirmPasswordInput.value) {
+                        passwordMatchError.classList.remove('hidden');
+                        confirmPasswordInput.classList.add('border-red-500');
+                        confirmPasswordInput.classList.remove('border-gray-300');
+                        return;
+                    }
+
+                    // Get form data
+                    const formData = {
+                        email: document.getElementById('email').value,
+                        password: passwordInput.value,
+                        full_name: document.getElementById('fullName').value,
+                        account_type: document.querySelector('input[name="accountType"]:checked').value,
+                        license_number: document.getElementById('licenseNumber').value
+                    };
+
+                    // Register user
+                    const result = await medivaultAPI.register(formData);
+                    
+                    if (result.success) {
+                        medivaultAPI.showNotification('Account created successfully! Redirecting...', 'success');
+                        
+                        // Redirect based on account type
+                        setTimeout(() => {
+                            if (formData.account_type === 'doctor') {
+                                window.location.href = 'doctorsdashboard.html';
+                            } else {
+                                window.location.href = 'dashboard.html';
+                            }
+                        }, 1500);
+                    } else {
+                        medivaultAPI.showNotification(result.error || 'Registration failed', 'error');
+                    }
+                } catch (error) {
+                    medivaultAPI.showNotification('Network error. Please try again.', 'error');
+                } finally {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
+
+            // Google OAuth functionality
+            document.getElementById('googleSignUpBtn').addEventListener('click', function() {
+                const accountType = document.querySelector('input[name="accountType"]:checked').value;
+                
+                // Open Google OAuth in popup
+                const popup = window.open(
+                    `/auth/google?account_type=${accountType}`,
+                    'google-oauth',
+                    'width=500,height=600,scrollbars=yes,resizable=yes'
+                );
+
+                // Listen for messages from popup
+                window.addEventListener('message', function(event) {
+                    if (event.origin !== window.location.origin) return;
+
+                    if (event.data.type === 'google_auth_success') {
+                        popup.close();
+                        medivaultAPI.setCurrentUser(event.data.user);
+                        medivaultAPI.showNotification('Google signup successful! Redirecting...', 'success');
+                        
+                        setTimeout(() => {
+                            if (event.data.user.account_type === 'doctor') {
+                                window.location.href = 'doctorsdashboard.html';
+                            } else {
+                                window.location.href = 'dashboard.html';
+                            }
+                        }, 1000);
+                    } else if (event.data.type === 'google_auth_error') {
+                        popup.close();
+                        medivaultAPI.showNotification('Google signup failed: ' + event.data.error, 'error');
+                    }
+                });
+            });
+        });
+    </script>
+    <!-- Add this modal code just before the closing </body> tag -->
+    <div id="signupModal" class="fixed z-50 inset-0 hidden overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6">
+                <div class="sm:flex sm:items-start">
+                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                        <i class="fas fa-user-plus text-blue-600"></i>
+                    </div>
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Create Account</h3>
+                    </div>
+                </div>
+
+                <form id="signupForm" class="mt-5">
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Role</label>
+                        <div class="mt-1 space-y-2">
+                            <div class="flex items-center">
+                                <input type="radio" id="patient" name="role" value="patient" checked class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
+                                <label for="patient" class="ml-2 text-sm text-gray-700">Patient</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="doctor" name="role" value="doctor" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
+                                <label for="doctor" class="ml-2 text-sm text-gray-700">Doctor</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 sm:mt-6">
+                        <button type="submit" class="w-full btn-primary px-4 py-2 rounded-md text-white font-medium">
+                            Create Account
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-4 flex justify-end">
+                    <button onclick="closeModal()" class="text-sm text-gray-500 hover:text-gray-700">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Toggle password visibility
+            const togglePasswordButtons = document.querySelectorAll('.toggle-password');
+            togglePasswordButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const input = this.parentElement.previousElementSibling;
+                    const icon = this.querySelector('i');
+
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.replace('fa-eye', 'fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.replace('fa-eye-slash', 'fa-eye');
+                    }
+                });
+            });
+
+            // Show/hide doctor license field based on account type
+            const accountTypeRadios = document.querySelectorAll('input[name="accountType"]');
+            const doctorLicenseField = document.getElementById('doctorLicenseField');
+
+            accountTypeRadios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    if (this.value === 'doctor') {
+                        doctorLicenseField.classList.remove('hidden');
+                        document.getElementById('licenseNumber').required = true;
+                    } else {
+                        doctorLicenseField.classList.add('hidden');
+                        document.getElementById('licenseNumber').required = false;
+                    }
+                });
+            });
+
+            // Password match validation
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const passwordMatchError = document.getElementById('passwordMatchError');
+
+            function validatePasswordMatch() {
+                if (passwordInput.value !== confirmPasswordInput.value) {
+                    passwordMatchError.classList.remove('hidden');
+                    confirmPasswordInput.classList.add('border-red-500');
+                    confirmPasswordInput.classList.remove('border-gray-300');
+                    return false;
+                } else {
+                    passwordMatchError.classList.add('hidden');
+                    confirmPasswordInput.classList.remove('border-red-500');
+                    confirmPasswordInput.classList.add('border-gray-300');
+                    return true;
+                }
+            }
+
+            passwordInput.addEventListener('input', validatePasswordMatch);
+            confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+
+            // Form submission
+            const signupForm = document.getElementById('signupForm');
+            signupForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Validate form
+                if (!validatePasswordMatch()) {
+                    return;
+                }
+
+                if (!document.getElementById('terms').checked) {
+                    alert('Please agree to the Terms & Privacy Policy');
+                    return;
+                }
+
+                // Check if doctor license is required and provided
+                const accountType = document.querySelector('input[name="accountType"]:checked').value;
+                if (accountType === 'doctor' && !document.getElementById('licenseNumber').value) {
+                    alert('Please enter your medical license number');
+                    return;
+                }
+
+                // Form is valid, redirect based on account type
+                if (accountType === 'doctor') {
+                    window.location.href = 'doctorsdashboard.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+
+                // In a real application, you would submit the form data to your backend first
+                // and then redirect based on the response
+            });
+        });
+    </script>
+    <!-- Modify the existing Sign Up button to open the modal -->
+    <button onclick="openModal()" class="btn-primary px-6 py-2 rounded-full text-white font-medium">Sign Up</button>
+</body>
+
+</html>

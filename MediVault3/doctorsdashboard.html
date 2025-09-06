@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediVault - Doctor Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #2639ED;
+            --accent-lavender: #A78BFA;
+            --accent-sky: #93C5FD;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F8FAFC;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item.active {
+            background-color: rgba(38, 57, 237, 0.1);
+            color: var(--primary-blue);
+            border-left: 3px solid var(--primary-blue);
+        }
+
+        .nav-item.active i {
+            color: var(--primary-blue);
+        }
+
+        .badge-primary {
+            background-color: rgba(38, 57, 237, 0.1);
+            color: var(--primary-blue);
+        }
+
+        .badge-warning {
+            background-color: rgba(234, 179, 8, 0.1);
+            color: rgba(234, 179, 8, 1);
+        }
+
+        .badge-success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: rgba(16, 185, 129, 1);
+        }
+
+        .badge-danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: rgba(239, 68, 68, 1);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-lavender) 100%);
+        }
+
+        .scrollable-container {
+            scrollbar-width: thin;
+            scrollbar-color: #E2E8F0 transparent;
+        }
+
+        .scrollable-container::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .scrollable-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .scrollable-container::-webkit-scrollbar-thumb {
+            background-color: #E2E8F0;
+            border-radius: 20px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .patient-row:hover {
+            background-color: #F8FAFC;
+        }
+
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <div class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 border-r border-gray-200 bg-white">
+                <div class="flex items-center">
+                    <img src="/medivault logo.jpg" alt="MediVault Logo" class="h-18 w-64 mr-3">
+                </div>
+                <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
+                    <nav class="flex-1 space-y-2">
+                        <a href="#" class="nav-item active flex items-center px-4 py-3 text-sm font-medium rounded-lg">
+                            <i class="fas fa-tachometer-alt mr-3 text-gray-500"></i>
+                            Dashboard
+                        </a>
+                        <a href="#"
+                            class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-calendar-alt mr-3 text-gray-500"></i>
+                            Appointments
+                        </a>
+                        <a href="#"
+                            class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-folder-open mr-3 text-gray-500"></i>
+                            Patient Records
+                        </a>
+                        <a href="#"
+                            class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-brain mr-3 text-gray-500"></i>
+                            AI Insights
+                        </a>
+                        <a href="#"
+                            class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-user-clock mr-3 text-gray-500"></i>
+                            Access Requests
+                        </a>
+                        <a href="#"
+                            class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-cog mr-3 text-gray-500"></i>
+                            Settings
+                        </a>
+                        <a href="#"
+                            class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-headset mr-3 text-gray-500"></i>
+                            Support
+                        </a>
+                    </nav>
+                </div>
+                <div class="p-4 border-t border-gray-200">
+                    <div class="flex items-center">
+                        <img class="w-10 h-10 rounded-full" src="https://randomuser.me/api/portraits/men/32.jpg"
+                            alt="Doctor profile">
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-900">Dr. Raj Sharma</p>
+                            <p class="text-xs text-gray-500">Cardiologist</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Top Navigation -->
+            <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200 bg-white">
+                <div class="flex items-center md:hidden">
+                    <button class="text-gray-500 focus:outline-none">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button class="text-gray-500 focus:outline-none">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </div>
+                    <div class="relative">
+                        <button class="text-gray-500 focus:outline-none">
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-blue-500 rounded-full"></span>
+                    </div>
+                    <div class="flex items-center">
+                        <img class="w-8 h-8 rounded-full" src="https://randomuser.me/api/portraits/men/32.jpg"
+                            alt="Doctor profile">
+                        <span class="ml-2 text-sm font-medium text-gray-700">Dr. Sharma</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="flex-1 overflow-y-auto p-6">
+                <!-- Welcome Section -->
+                <div class="mb-8">
+                    <h1 class="text-2xl font-bold text-gray-800">Good Morning, Dr. Sharma <span
+                            class="text-blue-600">👨‍⚕️</span></h1>
+                    <p class="text-gray-600">Here's your daily overview and tasks</p>
+                </div>
+
+                <!-- Today at a Glance Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="dashboard-card p-6 fade-in">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Appointments Today</p>
+                                <p class="text-2xl font-bold text-gray-800 mt-1">7</p>
+                            </div>
+                            <div class="p-3 rounded-full bg-blue-50 text-blue-600">
+                                <i class="fas fa-calendar-check text-lg"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                                <span>3 upcoming in next hour</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card p-6 fade-in">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Pending Reports</p>
+                                <p class="text-2xl font-bold text-gray-800 mt-1">12</p>
+                            </div>
+                            <div class="p-3 rounded-full bg-yellow-50 text-yellow-500">
+                                <i class="fas fa-file-medical text-lg"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="w-2 h-2 bg-yellow-500 rounded-full mr-2"></span>
+                                <span>4 marked as urgent</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card p-6 fade-in">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Access Requests</p>
+                                <p class="text-2xl font-bold text-gray-800 mt-1">5</p>
+                            </div>
+                            <div class="p-3 rounded-full bg-purple-50 text-purple-600">
+                                <i class="fas fa-user-clock text-lg"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                                <span>2 new since yesterday</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card p-6 fade-in">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Messages</p>
+                                <p class="text-2xl font-bold text-gray-800 mt-1">8</p>
+                            </div>
+                            <div class="p-3 rounded-full bg-green-50 text-green-600">
+                                <i class="fas fa-comment-medical text-lg"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                <span>3 require response</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appointment Queue Section -->
+                <div class="dashboard-card p-6 mb-8 fade-in">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-lg font-bold text-gray-800">Today's Appointments</h2>
+                        <button class="text-sm text-blue-600 hover:text-blue-800 font-medium">View All</button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Time</th>
+                                    <th
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Patient</th>
+                                    <th
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Reason</th>
+                                    <th
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Type</th>
+                                    <th
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">09:30 AM</div>
+                                        <div class="text-xs text-gray-500">In 25 minutes</div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full"
+                                                    src="https://randomuser.me/api/portraits/women/42.jpg" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Priya Patel</div>
+                                                <div class="text-xs text-gray-500">Age: 32</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">Follow-up consultation</div>
+                                        <div class="text-xs text-gray-500">Hypertension</div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full badge-primary">In-person</span>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">Records</button>
+                                        <button class="text-green-600 hover:text-green-900">Start</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">10:15 AM</div>
+                                        <div class="text-xs text-gray-500">In 1 hour 10 minutes</div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full"
+                                                    src="https://randomuser.me/api/portraits/men/64.jpg" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Amit Kumar</div>
+                                                <div class="text-xs text-gray-500">Age: 45</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">New patient</div>
+                                        <div class="text-xs text-gray-500">Chest pain evaluation</div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full badge-primary">Virtual</span>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">Records</button>
+                                        <button class="text-green-600 hover:text-green-900">Start</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">11:30 AM</div>
+                                        <div class="text-xs text-gray-500">In 2 hours 25 minutes</div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full"
+                                                    src="https://randomuser.me/api/portraits/women/33.jpg" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Meera Desai</div>
+                                                <div class="text-xs text-gray-500">Age: 58</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">Annual checkup</div>
+                                        <div class="text-xs text-gray-500">Diabetes management</div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full badge-primary">In-person</span>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">Records</button>
+                                        <button class="text-green-600 hover:text-green-900">Start</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Patient Records and AI Insights Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Patient Records -->
+                    <div class="dashboard-card p-6 lg:col-span-2 fade-in">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold text-gray-800">Patient Records</h2>
+                            <div class="relative">
+                                <input type="text" placeholder="Search patients..."
+                                    class="pl-8 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Patient</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Last Visit</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Condition</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Access</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr class="patient-row cursor-pointer">
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full"
+                                                        src="https://randomuser.me/api/portraits/women/42.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Priya Patel</div>
+                                                    <div class="text-xs text-gray-500">ID: MVP-0042</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">2 weeks ago</div>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <span
+                                                class="px-2 py-1 text-xs rounded-full badge-warning">Hypertension</span>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs rounded-full badge-success">Full</span>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3">View</button>
+                                            <button class="text-red-600 hover:text-red-900">Revoke</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="patient-row cursor-pointer">
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full"
+                                                        src="https://randomuser.me/api/portraits/men/64.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Amit Kumar</div>
+                                                    <div class="text-xs text-gray-500">ID: MVP-0064</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">1 month ago</div>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs rounded-full badge-danger">Cardiac
+                                                Risk</span>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs rounded-full badge-success">Full</span>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3">View</button>
+                                            <button class="text-red-600 hover:text-red-900">Revoke</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="patient-row cursor-pointer">
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full"
+                                                        src="https://randomuser.me/api/portraits/women/33.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Meera Desai</div>
+                                                    <div class="text-xs text-gray-500">ID: MVP-0033</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">3 months ago</div>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs rounded-full badge-warning">Type 2
+                                                Diabetes</span>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs rounded-full badge-success">Full</span>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3">View</button>
+                                            <button class="text-red-600 hover:text-red-900">Revoke</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mt-4 flex justify-between items-center">
+                            <div class="text-sm text-gray-500">Showing 3 of 42 patients</div>
+                            <button class="text-sm text-blue-600 hover:text-blue-800 font-medium">View All
+                                Patients</button>
+                        </div>
+                    </div>
+
+                    <!-- AI Health Insights -->
+                    <div class="dashboard-card p-6 fade-in">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold text-gray-800">AI Health Insights</h2>
+                            <i class="fas fa-brain text-blue-600"></i>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="p-4 border border-blue-100 rounded-lg bg-blue-50">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <i class="fas fa-exclamation-triangle text-yellow-500"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="text-sm font-medium text-gray-900">Pre-diabetic trend detected</h3>
+                                        <p class="text-xs text-gray-500 mt-1">Patient: Priya Patel (MVP-0042)</p>
+                                        <p class="text-xs text-gray-700 mt-2">3 consecutive elevated HbA1c readings
+                                            (5.8-6.2) over 6 months</p>
+                                        <button class="mt-2 text-xs text-blue-600 hover:text-blue-800 font-medium">View
+                                            full report →</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 border border-red-100 rounded-lg bg-red-50">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <i class="fas fa-heartbeat text-red-500"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="text-sm font-medium text-gray-900">Elevated cardiac risk</h3>
+                                        <p class="text-xs text-gray-500 mt-1">Patient: Amit Kumar (MVP-0064)</p>
+                                        <p class="text-xs text-gray-700 mt-2">High LDL (160 mg/dL) + family history of
+                                            CAD</p>
+                                        <button class="mt-2 text-xs text-blue-600 hover:text-blue-800 font-medium">View
+                                            full report →</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 border border-green-100 rounded-lg bg-green-50">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <i class="fas fa-chart-line text-green-500"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="text-sm font-medium text-gray-900">Positive treatment response</h3>
+                                        <p class="text-xs text-gray-500 mt-1">Patient: Meera Desai (MVP-0033)</p>
+                                        <p class="text-xs text-gray-700 mt-2">Fasting glucose reduced by 28% in 3 months
+                                        </p>
+                                        <button class="mt-2 text-xs text-blue-600 hover:text-blue-800 font-medium">View
+                                            full report →</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button
+                                class="w-full text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center justify-center">
+                                <i class="fas fa-robot mr-2"></i>
+                                Generate Custom Insights Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Incoming Access Requests and Notes Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Incoming Access Requests -->
+                    <div class="dashboard-card p-6 fade-in">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold text-gray-800">Access Requests</h2>
+                            <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">5 New</span>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="p-4 border border-gray-200 rounded-lg">
+                                <div class="flex items-start justify-between">
+                                    <div>
+                                        <h3 class="text-sm font-medium text-gray-900">Rahul Verma</h3>
+                                        <p class="text-xs text-gray-500 mt-1">Requesting access to:</p>
+                                        <p class="text-xs text-gray-700 mt-1">Cardiology reports (3), Lab results (12)
+                                        </p>
+                                        <p class="text-xs text-gray-500 mt-2">Duration: 6 months</p>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button
+                                            class="px-3 py-1 text-xs rounded-lg bg-green-100 text-green-800 hover:bg-green-200">Accept</button>
+                                        <button
+                                            class="px-3 py-1 text-xs rounded-lg bg-red-100 text-red-800 hover:bg-red-200">Decline</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 border border-gray-200 rounded-lg">
+                                <div class="flex items-start justify-between">
+                                    <div>
+                                        <h3 class="text-sm font-medium text-gray-900">Neha Gupta</h3>
+                                        <p class="text-xs text-gray-500 mt-1">Requesting access to:</p>
+                                        <p class="text-xs text-gray-700 mt-1">All records</p>
+                                        <p class="text-xs text-gray-500 mt-2">Duration: 1 year</p>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button
+                                            class="px-3 py-1 text-xs rounded-lg bg-green-100 text-green-800 hover:bg-green-200">Accept</button>
+                                        <button
+                                            class="px-3 py-1 text-xs rounded-lg bg-red-100 text-red-800 hover:bg-red-200">Decline</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button class="w-full text-sm text-blue-600 hover:text-blue-800 font-medium">View All
+                                Requests</button>
+                        </div>
+                    </div>
+
+                    <!-- Notes & Prescriptions -->
+                    <div class="dashboard-card p-6 lg:col-span-2 fade-in">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold text-gray-800">Quick Notes & Prescriptions</h2>
+                            <div class="flex space-x-2">
+                                <button
+                                    class="px-3 py-1 text-xs rounded-lg bg-blue-100 text-blue-800 hover:bg-blue-200 flex items-center">
+                                    <i class="fas fa-microphone mr-1"></i> Dictate
+                                </button>
+                                <button
+                                    class="px-3 py-1 text-xs rounded-lg bg-purple-100 text-purple-800 hover:bg-purple-200 flex items-center">
+                                    <i class="fas fa-file-upload mr-1"></i> Upload
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <select
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                <option>Select patient...</option>
+                                <option>Priya Patel (MVP-0042)</option>
+                                <option>Amit Kumar (MVP-0064)</option>
+                                <option>Meera Desai (MVP-0033)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <textarea rows="4"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                placeholder="Write consultation notes here..."></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Follow-up Date</label>
+                                <input type="date"
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Follow-up Reason</label>
+                                <select
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                    <option>Select reason...</option>
+                                    <option>Test results review</option>
+                                    <option>Treatment evaluation</option>
+                                    <option>Medication adjustment</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <div class="flex space-x-2">
+                                <button
+                                    class="px-4 py-2 text-sm rounded-lg bg-gray-100 text-gray-800 hover:bg-gray-200 flex items-center">
+                                    <i class="fas fa-pills mr-2"></i> Add Prescription
+                                </button>
+                                <button
+                                    class="px-4 py-2 text-sm rounded-lg bg-gray-100 text-gray-800 hover:bg-gray-200 flex items-center">
+                                    <i class="fas fa-vial mr-2"></i> Order Tests
+                                </button>
+                            </div>
+                            <button class="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700">Save
+                                Notes</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Section -->
+                <div class="dashboard-card p-6 fade-in">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-lg font-bold text-gray-800">Practice Analytics</h2>
+                        <select
+                            class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <option>Last 30 days</option>
+                            <option>Last 3 months</option>
+                            <option>Last 6 months</option>
+                            <option>Last year</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="p-4 border border-gray-200 rounded-lg">
+                            <p class="text-sm font-medium text-gray-500">Patients Consulted</p>
+                            <p class="text-2xl font-bold text-gray-800 mt-1">84</p>
+                            <p class="text-xs text-gray-500 mt-2">↑ 12% from last month</p>
+                        </div>
+
+                        <div class="p-4 border border-gray-200 rounded-lg">
+                            <p class="text-sm font-medium text-gray-500">Reports Reviewed</p>
+                            <p class="text-2xl font-bold text-gray-800 mt-1">127</p>
+                            <p class="text-xs text-gray-500 mt-2">↑ 8% from last month</p>
+                        </div>
+
+                        <div class="p-4 border border-gray-200 rounded-lg">
+                            <p class="text-sm font-medium text-gray-500">Avg. Consultation</p>
+                            <p class="text-2xl font-bold text-gray-800 mt-1">18 min</p>
+                            <p class="text-xs text-gray-500 mt-2">↓ 2 min from last month</p>
+                        </div>
+
+                        <div class="p-4 border border-gray-200 rounded-lg">
+                            <p class="text-sm font-medium text-gray-500">Top Condition</p>
+                            <p class="text-xl font-bold text-gray-800 mt-1">Hypertension</p>
+                            <p class="text-xs text-gray-500 mt-2">32% of cases</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <div class="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
+                            <p class="text-gray-400">Consultation trend chart would appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Record Modal (hidden by default) -->
+    <div id="patientModal" class="fixed inset-0 z-50 hidden modal-overlay">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-screen overflow-y-auto"
+                style="animation: fadeIn 0.3s ease-in;">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-gray-800">Patient Medical Record</h3>
+                        <button id="closeModal" class="text-gray-400 hover:text-gray-500">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="p-6">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <img class="h-16 w-16 rounded-full" src="https://randomuser.me/api/portraits/women/42.jpg"
+                                alt="">
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="text-lg font-bold text-gray-800">Priya Patel</h4>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Female</span>
+                                <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Age: 32</span>
+                                <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Blood Type:
+                                    A+</span>
+                                <span
+                                    class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Hypertension</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="md:col-span-2">
+                            <h5 class="text-md font-bold text-gray-800 mb-4">Medical History</h5>
+
+                            <div class="space-y-4">
+                                <div class="p-4 border border-gray-200 rounded-lg">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 mt-1">
+                                            <i class="fas fa-heartbeat text-blue-600"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <div class="flex items-center justify-between">
+                                                <h6 class="text-sm font-medium text-gray-900">Hypertension Diagnosis
+                                                </h6>
+                                                <span class="text-xs text-gray-500">15 Jan 2022</span>
+                                            </div>
+                                            <p class="text-xs text-gray-600 mt-1">Diagnosed with stage 1 hypertension
+                                                (BP 142/92). Prescribed amlodipine 5mg daily.</p>
+                                            <div class="mt-2">
+                                                <span class="text-xs text-gray-500">Dr. Raj Sharma</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 border border-gray-200 rounded-lg">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 mt-1">
+                                            <i class="fas fa-allergies text-blue-600"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <div class="flex items-center justify-between">
+                                                <h6 class="text-sm font-medium text-gray-900">Allergy Record</h6>
+                                                <span class="text-xs text-gray-500">22 Mar 2021</span>
+                                            </div>
+                                            <p class="text-xs text-gray-600 mt-1">Allergic reaction to penicillin (rash,
+                                                difficulty breathing).</p>
+                                            <div class="mt-2">
+                                                <span class="text-xs text-gray-500">Dr. Anjali Mehta</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="text-md font-bold text-gray-800 mt-8 mb-4">Current Medications</h5>
+                            <div class="p-4 border border-gray-200 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h6 class="text-sm font-medium text-gray-900">Amlodipine 5mg</h6>
+                                        <p class="text-xs text-gray-600 mt-1">1 tablet daily - For hypertension</p>
+                                    </div>
+                                    <div class="text-xs text-gray-500">Prescribed: 15 Jan 2022</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h5 class="text-md font-bold text-gray-800 mb-4">Vitals & Metrics</h5>
+
+                            <div class="space-y-4">
+                                <div class="p-4 border border-gray-200 rounded-lg">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h6 class="text-sm font-medium text-gray-900">Blood Pressure</h6>
+                                            <p class="text-xs text-gray-600 mt-1">Last reading: 138/88 mmHg</p>
+                                        </div>
+                                        <div class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800">
+                                            Elevated</div>
+                                    </div>
+                                    <div class="mt-3 h-2 bg-gray-200 rounded-full">
+                                        <div class="h-2 bg-yellow-500 rounded-full" style="width: 75%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 border border-gray-200 rounded-lg">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h6 class="text-sm font-medium text-gray-900">Weight</h6>
+                                            <p class="text-xs text-gray-600 mt-1">Last reading: 68 kg</p>
+                                        </div>
+                                        <div class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">Normal
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 h-2 bg-gray-200 rounded-full">
+                                        <div class="h-2 bg-green-500 rounded-full" style="width: 60%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 border border-gray-200 rounded-lg">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h6 class="text-sm font-medium text-gray-900">HbA1c</h6>
+                                            <p class="text-xs text-gray-600 mt-1">Last reading: 5.9%</p>
+                                        </div>
+                                        <div class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800">
+                                            Pre-diabetic</div>
+                                    </div>
+                                    <div class="mt-3 h-2 bg-gray-200 rounded-full">
+                                        <div class="h-2 bg-yellow-500 rounded-full" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="text-md font-bold text-gray-800 mt-8 mb-4">Recent Reports</h5>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-file-pdf text-red-500 mr-3"></i>
+                                        <span class="text-sm text-gray-800">CBC Report - 12 May 2023</span>
+                                    </div>
+                                    <button class="text-blue-600 text-sm">Download</button>
+                                </div>
+                                <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-file-pdf text-red-500 mr-3"></i>
+                                        <span class="text-sm text-gray-800">Lipid Profile - 12 May 2023</span>
+                                    </div>
+                                    <button class="text-blue-600 text-sm">Download</button>
+                                </div>
+                                <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-file-image text-blue-500 mr-3"></i>
+                                        <span class="text-sm text-gray-800">ECG - 15 Jan 2022</span>
+                                    </div>
+                                    <button class="text-blue-600 text-sm">View</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 border-t border-gray-200 bg-gray-50">
+                    <div class="flex justify-end space-x-3">
+                        <button
+                            class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100">Print
+                            Record</button>
+                        <button
+                            class="px-4 py-2 bg-blue-600 rounded-lg text-sm font-medium text-white hover:bg-blue-700">Add
+                            New Entry</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Toggle patient record modal
+            const patientRows = document.querySelectorAll('.patient-row');
+            const patientModal = document.getElementById('patientModal');
+            const closeModal = document.getElementById('closeModal');
+
+            patientRows.forEach(row => {
+                row.addEventListener('click', function () {
+                    patientModal.classList.remove('hidden');
+                });
+            });
+
+            closeModal.addEventListener('click', function () {
+                patientModal.classList.add('hidden');
+            });
+
+            // Close modal when clicking outside
+            patientModal.addEventListener('click', function (e) {
+                if (e.target === patientModal) {
+                    patientModal.classList.add('hidden');
+                }
+            });
+
+            // Simulate loading animations
+            const fadeIns = document.querySelectorAll('.fade-in');
+            fadeIns.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            // Add hover effects to dashboard cards
+            const cards = document.querySelectorAll('.dashboard-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-2px)';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
