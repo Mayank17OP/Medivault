@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediVault | Your Health Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'medivault-blue': '#2639ED',
+                        'medivault-light': '#EFF2FF',
+                        'medivault-dark': '#1A2BB5',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #EFF2FF 0%, #FFFFFF 100%);
+        }
+
+        .health-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .health-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .record-item {
+            border-left: 3px solid #2639ED;
+        }
+
+        .provider-badge {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+        }
+
+        .trend-up {
+            color: #EF4444;
+        }
+
+        .trend-down {
+            color: #10B981;
+        }
+
+        .trend-neutral {
+            color: #6B7280;
+        }
+
+        .smooth-transition {
+            transition: all 0.3s ease;
+        }
+
+        .medication-time {
+            background: rgba(38, 57, 237, 0.1);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Active nav item */
+        .nav-item-active {
+            background-color: #EFF2FF;
+            color: #2639ED;
+        }
+    </style>
+</head>
+
+<body class="antialiased text-gray-800">
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <div class="min-h-screen flex">
+            <!-- Sidebar -->
+            <div class="hidden md:flex md:flex-shrink-0">
+                <div class="flex flex-col w-64 h-screen sticky top-0 bg-white border-r border-gray-200">
+                    <!-- Fixed top section (logo) -->
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-16 px-4 bg-white border-b border-gray-200">
+                            <div class="flex items-center">
+                                <img src="/medivault logo.jpg" alt="MediVault Logo" class="h-20 w-64">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scrollable middle section (navigation items) -->
+                    <div class="flex-1 overflow-y-auto">
+                        <div class="space-y-1 px-4 py-4">
+                            <a href="#dashboard"
+                                class="flex items-center px-2 py-3 text-sm font-medium rounded-md nav-item-active">
+                                <i class="fas fa-home mr-3 text-medivault-blue"></i>
+                                Dashboard
+                            </a>
+                            <a href="#medical-records"
+                                class="flex items-center px-2 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                                <i class="fas fa-file-medical mr-3"></i>
+                                Medical Records
+                            </a>
+                            <a href="#healthcare-providers"
+                                class="flex items-center px-2 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                                <i class="fas fa-user-md mr-3"></i>
+                                Providers
+                            </a>
+                            <a href="#ai-insights"
+                                class="flex items-center px-2 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                                <i class="fas fa-chart-line mr-3"></i>
+                                Health Trends
+                            </a>
+                            <a href="#medication-reminders"
+                                class="flex items-center px-2 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                                <i class="fas fa-prescription-bottle-alt mr-3"></i>
+                                Medications
+                            </a>
+                            <a href="#wellness-tips"
+                                class="flex items-center px-2 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                                <i class="fas fa-heart mr-3"></i>
+                                Wellness Tips
+                            </a>
+                            <a href="#virtual-care"
+                                class="flex items-center px-2 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                                <i class="fas fa-video mr-3"></i>
+                                Virtual Care
+                            </a>
+                            <a href="qrcode.html"
+                                class="flex items-center px-2 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                                <i class="fas fa-qrcode mr-3"></i>
+                                Your QR
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Fixed bottom section -->
+                    <div class="flex-shrink-0 border-t border-gray-200 bg-white">
+                        <div class="px-4 py-4">
+                            <div class="px-2 py-3 text-sm font-medium text-gray-600">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0">
+                                        <img class="h-8 w-8 rounded-full"
+                                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60"
+                                            alt="">
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-700">Sakshi Verma</p>
+                                        <a href="#" class="text-xs font-medium text-gray-500 hover:text-gray-700">View profile</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#"
+                                class="flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                                <i class="fas fa-cog mr-3"></i>
+                                Settings
+                            </a>
+                            <a href="/index.html"
+                                class="flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                                <i class="fas fa-sign-out-alt mr-3"></i>
+                                Sign out
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <div class="flex-1 overflow-y-auto">
+                <!-- Your main content goes here -->
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Mobile top navigation -->
+            <div class="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200">
+                <div class="flex items-center">
+                    <i class="fas fa-shield-alt text-medivault-blue text-xl mr-2"></i>
+                    <span class="text-lg font-semibold text-gray-900">MediVault</span>
+                </div>
+                <button class="text-gray-500 hover:text-gray-600">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <main class="flex-1 overflow-y-auto focus:outline-none gradient-bg">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-6">
+                    <!-- Welcome section -->
+                    <div class="mb-8" id="dashboard">
+                        <h1 class="text-2xl font-bold text-gray-900">Welcome back, Sakshi</h1>
+                        <p class="mt-1 text-gray-600">Here's your health summary for today, <span id="current-date"
+                                class="font-medium">June 15, 2023</span></p>
+                    </div>
+
+                    <!-- Health at a glance -->
+                    <div class="mb-8">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <i class="fas fa-heartbeat text-medivault-blue mr-2"></i>
+                            Your Health at a Glance
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <!-- Last check-up card -->
+                            <div class="health-card bg-white rounded-lg p-4">
+                                <div class="flex items-center">
+                                    <div class="p-3 rounded-full bg-medivault-light">
+                                        <i class="fas fa-calendar-check text-medivault-blue"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-500">Last check-up</p>
+                                        <p class="text-lg font-semibold">May 28, 2023</p>
+                                    </div>
+                                </div>
+                                <div class="mt-3 text-sm text-gray-500">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <i class="fas fa-check-circle mr-1"></i>
+                                        Up to date
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Current medications card -->
+                            <div class="health-card bg-white rounded-lg p-4">
+                                <div class="flex items-center">
+                                    <div class="p-3 rounded-full bg-medivault-light">
+                                        <i class="fas fa-pills text-medivault-blue"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-500">Current medications</p>
+                                        <p class="text-lg font-semibold">3 active</p>
+                                    </div>
+                                </div>
+                                <div class="mt-3 text-sm text-gray-500">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        <i class="fas fa-exclamation-circle mr-1"></i>
+                                        1 refill needed
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Upcoming appointments card -->
+                            <div class="health-card bg-white rounded-lg p-4">
+                                <div class="flex items-center">
+                                    <div class="p-3 rounded-full bg-medivault-light">
+                                        <i class="fas fa-calendar-alt text-medivault-blue"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-500">Upcoming</p>
+                                        <p class="text-lg font-semibold">June 22, 2023</p>
+                                    </div>
+                                </div>
+                                <div class="mt-3 text-sm text-gray-500">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        In 7 days
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Health alerts card -->
+                            <div class="health-card bg-white rounded-lg p-4">
+                                <div class="flex items-center">
+                                    <div class="p-3 rounded-full bg-medivault-light">
+                                        <i class="fas fa-bell text-medivault-blue"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-500">Health alerts</p>
+                                        <p class="text-lg font-semibold">1 new</p>
+                                    </div>
+                                </div>
+                                <div class="mt-3 text-sm text-gray-500">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        Review now
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medical records section -->
+                    <div class="mb-8" id="medical-records">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+                                <i class="fas fa-file-medical text-medivault-blue mr-2"></i>
+                                Your Medical Records
+                            </h2>
+                            <button
+                                class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-medivault-blue hover:bg-medivault-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                <i class="fas fa-plus mr-1"></i>
+                                Add Record
+                            </button>
+                        </div>
+
+                        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                            <div class="border-b border-gray-200">
+                                <div class="px-4 py-5 sm:px-6">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                            Recent Records
+                                        </h3>
+                                        <div class="relative">
+                                            <select
+                                                class="block appearance-none bg-white border border-gray-300 text-gray-700 py-1 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 text-sm">
+                                                <option>Last 30 days</option>
+                                                <option>Last 3 months</option>
+                                                <option>Last 6 months</option>
+                                                <option>All records</option>
+                                            </select>
+                                            <div
+                                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                                <i class="fas fa-chevron-down text-xs"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white overflow-hidden">
+                                <ul class="divide-y divide-gray-200">
+                                    <!-- Record item -->
+                                    <li class="record-item hover:bg-gray-50 smooth-transition">
+                                        <div class="px-4 py-4 sm:px-6">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <div class="flex items-center">
+                                                        <p class="text-sm font-medium text-medivault-blue truncate">
+                                                            Blood Test Results</p>
+                                                        <span
+                                                            class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                                            Completed
+                                                        </span>
+                                                    </div>
+                                                    <div
+                                                        class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
+                                                        <div class="mt-2 flex items-center text-sm text-gray-500">
+                                                            <i
+                                                                class="fas fa-calendar-day mr-1.5 text-gray-400 flex-shrink-0"></i>
+                                                            June 10, 2023
+                                                        </div>
+                                                        <div class="mt-2 flex items-center text-sm text-gray-500">
+                                                            <i
+                                                                class="fas fa-user-md mr-1.5 text-gray-400 flex-shrink-0"></i>
+                                                            Dr. Moksh
+                                                        </div>
+                                                        <div class="mt-2 flex items-center text-sm text-gray-500">
+                                                            <i
+                                                                class="fas fa-hospital mr-1.5 text-gray-400 flex-shrink-0"></i>
+                                                            City Medical Center
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-4 flex-shrink-0 flex">
+                                                    <button
+                                                        class="ml-4 inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                                        <i class="fas fa-eye mr-1"></i>
+                                                        <a
+                                                            href="https://www.pdffiller.com/preview/473/519/473519684/large.png">View</a>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <!-- Record item -->
+                                    <li class="record-item hover:bg-gray-50 smooth-transition">
+                                        <div class="px-4 py-4 sm:px-6">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <div class="flex items-center">
+                                                        <p class="text-sm font-medium text-medivault-blue truncate">
+                                                            X-Ray Scan (Chest)</p>
+                                                        <span
+                                                            class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                                            Completed
+                                                        </span>
+                                                    </div>
+                                                    <div
+                                                        class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
+                                                        <div class="mt-2 flex items-center text-sm text-gray-500">
+                                                            <i
+                                                                class="fas fa-calendar-day mr-1.5 text-gray-400 flex-shrink-0"></i>
+                                                            May 28, 2023
+                                                        </div>
+                                                        <div class="mt-2 flex items-center text-sm text-gray-500">
+                                                            <i
+                                                                class="fas fa-user-md mr-1.5 text-gray-400 flex-shrink-0"></i>
+                                                            Dr. Laavanya
+                                                        </div>
+                                                        <div class="mt-2 flex items-center text-sm text-gray-500">
+                                                            <i
+                                                                class="fas fa-hospital mr-1.5 text-gray-400 flex-shrink-0"></i>
+                                                            City Medical Center
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-4 flex-shrink-0 flex">
+                                                    <button
+                                                        class="ml-4 inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                                        <i class="fas fa-eye mr-1"></i>
+                                                        <a
+                                                            href="https://www.bhf.org.uk/-/media/images/information-support/tests/chest-x-ray/normal-chest-x-ray-620x400.jpg?h=400&w=620&rev=d9cfde6ea0a249649d60284ae972f2da&hash=116C2CF5D2AA30EC9CDCAE7712897203">View</a>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <!-- Record item -->
+                                    <li class="record-item hover:bg-gray-50 smooth-transition">
+                                        <div class="px-4 py-4 sm:px-6">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <div class="flex items-center">
+                                                        <p class="text-sm font-medium text-medivault-blue truncate">
+                                                            Annual Physical Exam</p>
+                                                        <span
+                                                            class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                                            Completed
+                                                        </span>
+                                                    </div>
+                                                    <div
+                                                        class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
+                                                        <div class="mt-2 flex items-center text-sm text-gray-500">
+                                                            <i
+                                                                class="fas fa-calendar-day mr-1.5 text-gray-400 flex-shrink-0"></i>
+                                                            May 15, 2023
+                                                        </div>
+                                                        <div class="mt-2 flex items-center text-sm text-gray-500">
+                                                            <i
+                                                                class="fas fa-user-md mr-1.5 text-gray-400 flex-shrink-0"></i>
+                                                            Dr. Moksh
+                                                        </div>
+                                                        <div class="mt-2 flex items-center text-sm text-gray-500">
+                                                            <i
+                                                                class="fas fa-hospital mr-1.5 text-gray-400 flex-shrink-0"></i>
+                                                            City Medical Center
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-4 flex-shrink-0 flex">
+                                                    <button
+                                                        class="ml-4 inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                                        <i class="fas fa-eye mr-1"></i>
+                                                        <a
+                                                            href="https://images.sampleforms.com/wp-content/uploads/2017/05/Physical-Examination1.jpg">View</a>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Two column layout -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                        <!-- Left column (2/3 width) -->
+                        <div class="lg:col-span-2 space-y-6">
+                            <!-- Healthcare providers section -->
+                            <div id="healthcare-providers">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+                                        <i class="fas fa-user-md text-medivault-blue mr-2"></i>
+                                        Healthcare Providers
+                                    </h2>
+                                    <button
+                                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-medivault-blue hover:bg-medivault-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                        <i class="fas fa-plus mr-1"></i>
+                                        Add Provider
+                                    </button>
+                                </div>
+
+                                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                            Who has access to your records
+                                        </h3>
+                                        <p class="mt-1 text-sm text-gray-500">
+                                            Manage provider permissions and access history
+                                        </p>
+                                    </div>
+                                    <div class="bg-white overflow-hidden">
+                                        <ul class="divide-y divide-gray-200">
+                                            <!-- Provider item -->
+                                            <li class="hover:bg-gray-50 smooth-transition">
+                                                <div class="px-4 py-4 sm:px-6">
+                                                    <div class="flex items-center justify-between">
+                                                        <div class="flex items-center">
+                                                            <div
+                                                                class="flex-shrink-0 h-10 w-10 rounded-full bg-medivault-light flex items-center justify-center">
+                                                                <i class="fas fa-user-md text-medivault-blue"></i>
+                                                            </div>
+                                                            <div class="ml-4">
+                                                                <div class="text-sm font-medium text-gray-900">Dr.
+                                                                    Moksh</div>
+                                                                <div class="text-sm text-gray-500">Primary Care
+                                                                    Physician</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="ml-4 flex flex-col items-end">
+                                                            <span
+                                                                class="provider-badge inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                Full Access
+                                                            </span>
+                                                            <div class="mt-1 text-xs text-gray-500">
+                                                                Last viewed: June 12, 2023
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3 flex justify-end space-x-2">
+                                                        <button
+                                                            class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                                            <i class="fas fa-edit mr-1"></i>
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                                            <i class="fas fa-user-slash mr-1"></i>
+                                                            Revoke
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                            <!-- Provider item -->
+                                            <li class="hover:bg-gray-50 smooth-transition">
+                                                <div class="px-4 py-4 sm:px-6">
+                                                    <div class="flex items-center justify-between">
+                                                        <div class="flex items-center">
+                                                            <div
+                                                                class="flex-shrink-0 h-10 w-10 rounded-full bg-medivault-light flex items-center justify-center">
+                                                                <i class="fas fa-user-md text-medivault-blue"></i>
+                                                            </div>
+                                                            <div class="ml-4">
+                                                                <div class="text-sm font-medium text-gray-900">Dr.
+                                                                    Laavanya
+                                                                </div>
+                                                                <div class="text-sm text-gray-500">Cardiologist</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="ml-4 flex flex-col items-end">
+                                                            <span
+                                                                class="provider-badge inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                                                Limited Access
+                                                            </span>
+                                                            <div class="mt-1 text-xs text-gray-500">
+                                                                Last viewed: May 30, 2023
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3 flex justify-end space-x-2">
+                                                        <button
+                                                            class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                                            <i class="fas fa-edit mr-1"></i>
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                                            <i class="fas fa-user-slash mr-1"></i>
+                                                            Revoke
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                            <!-- Provider item -->
+                                            <li class="hover:bg-gray-50 smooth-transition">
+                                                <div class="px-4 py-4 sm:px-6">
+                                                    <div class="flex items-center justify-between">
+                                                        <div class="flex items-center">
+                                                            <div
+                                                                class="flex-shrink-0 h-10 w-10 rounded-full bg-medivault-light flex items-center justify-center">
+                                                                <i class="fas fa-hospital text-medivault-blue"></i>
+                                                            </div>
+                                                            <div class="ml-4">
+                                                                <div class="text-sm font-medium text-gray-900">City
+                                                                    Medical Center</div>
+                                                                <div class="text-sm text-gray-500">Emergency Department
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="ml-4 flex flex-col items-end">
+                                                            <span
+                                                                class="provider-badge inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                                Emergency Access
+                                                            </span>
+                                                            <div class="mt-1 text-xs text-gray-500">
+                                                                Last viewed: Never
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3 flex justify-end space-x-2">
+                                                        <button
+                                                            class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                                            <i class="fas fa-edit mr-1"></i>
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                                            <i class="fas fa-user-slash mr-1"></i>
+                                                            Revoke
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AI Insights section -->
+                            <div id="ai-insights">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+                                        <i class="fas fa-brain text-medivault-blue mr-2"></i>
+                                        AI Health Insights
+                                    </h2>
+                                    <button
+                                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-medivault-blue hover:bg-medivault-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                        <i class="fas fa-sync-alt mr-1"></i>
+                                        Refresh
+                                    </button>
+                                </div>
+
+                                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                            Your Health Trends & Recommendations
+                                        </h3>
+                                        <p class="mt-1 text-sm text-gray-500">
+                                            Personalized insights based on your health data
+                                        </p>
+                                    </div>
+                                    <div class="bg-white px-4 py-5 sm:p-6">
+                                        <!-- Alert card -->
+                                        <div class="health-card bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+                                            <div class="flex">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-exclamation-triangle h-5 w-5 text-red-400"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <h3 class="text-sm font-medium text-red-800">
+                                                        Blood Pressure Alert
+                                                    </h3>
+                                                    <div class="mt-2 text-sm text-red-700">
+                                                        <p>
+                                                            Your systolic blood pressure has been trending upward over
+                                                            the past 3 months.
+                                                            Last reading was 142/88 mmHg on June 10, 2023.
+                                                        </p>
+                                                    </div>
+                                                    <div class="mt-4">
+                                                        <div class="-mx-2 -my-1.5 flex flex-wrap">
+                                                            <button type="button"
+                                                                class="mr-2 mb-2 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                                                <i class="fas fa-calendar-plus mr-1"></i>
+                                                                Schedule Follow-up
+                                                            </button>
+                                                            <button type="button"
+                                                                class="mr-2 mb-2 inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                                                <i class="fas fa-chart-line mr-1"></i>
+                                                                View Trend Chart
+                                                            </button>
+                                                            <button type="button"
+                                                                class="mr-2 mb-2 inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                                                <i class="fas fa-lightbulb mr-1"></i>
+                                                                Lifestyle Tips
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Trend visualization -->
+                                        <div class="mb-6">
+                                            <h4 class="text-sm font-medium text-gray-900 mb-2">Blood Pressure Trend
+                                                (Last 6 Months)</h4>
+                                            <div class="bg-gray-50 p-4 rounded-lg">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <div class="text-xs text-gray-500">mmHg</div>
+                                                    <div class="flex space-x-2">
+                                                        <span class="text-xs font-medium text-gray-500">Systolic</span>
+                                                        <span class="text-xs font-medium text-gray-500">Diastolic</span>
+                                                    </div>
+                                                </div>
+                                                <!-- Simplified chart representation -->
+                                                <div class="relative h-40">
+                                                    <!-- Grid lines -->
+                                                    <div class="absolute inset-0 grid grid-cols-6 gap-1">
+                                                        <div class="border-r border-gray-200"></div>
+                                                        <div class="border-r border-gray-200"></div>
+                                                        <div class="border-r border-gray-200"></div>
+                                                        <div class="border-r border-gray-200"></div>
+                                                        <div class="border-r border-gray-200"></div>
+                                                        <div class="border-r border-gray-200"></div>
+                                                    </div>
+                                                    <div class="absolute inset-0 grid grid-rows-5 gap-1">
+                                                        <div class="border-b border-gray-200"></div>
+                                                        <div class="border-b border-gray-200"></div>
+                                                        <div class="border-b border-gray-200"></div>
+                                                        <div class="border-b border-gray-200"></div>
+                                                        <div class="border-b border-gray-200"></div>
+                                                    </div>
+
+                                                    <!-- Data points (simplified) -->
+                                                    <div
+                                                        class="absolute bottom-0 left-0 right-0 flex items-end justify-between px-4">
+                                                        <!-- January -->
+                                                        <div class="flex flex-col items-center" style="height: 60%">
+                                                            <div class="w-3 bg-blue-400 rounded-t"></div>
+                                                            <div class="w-3 bg-blue-300 rounded-t mt-1"
+                                                                style="height: 50%"></div>
+                                                            <div class="text-xs text-gray-500 mt-1">Jan</div>
+                                                        </div>
+                                                        <!-- February -->
+                                                        <div class="flex flex-col items-center" style="height: 55%">
+                                                            <div class="w-3 bg-blue-400 rounded-t"></div>
+                                                            <div class="w-3 bg-blue-300 rounded-t mt-1"
+                                                                style="height: 48%"></div>
+                                                            <div class="text-xs text-gray-500 mt-1">Feb</div>
+                                                        </div>
+                                                        <!-- March -->
+                                                        <div class="flex flex-col items-center" style="height: 65%">
+                                                            <div class="w-3 bg-blue-400 rounded-t"></div>
+                                                            <div class="w-3 bg-blue-300 rounded-t mt-1"
+                                                                style="height: 52%"></div>
+                                                            <div class="text-xs text-gray-500 mt-1">Mar</div>
+                                                        </div>
+                                                        <!-- April -->
+                                                        <div class="flex flex-col items-center" style="height: 70%">
+                                                            <div class="w-3 bg-blue-400 rounded-t"></div>
+                                                            <div class="w-3 bg-blue-300 rounded-t mt-1"
+                                                                style="height: 55%"></div>
+                                                            <div class="text-xs text-gray-500 mt-1">Apr</div>
+                                                        </div>
+                                                        <!-- May -->
+                                                        <div class="flex flex-col items-center" style="height: 75%">
+                                                            <div class="w-3 bg-blue-400 rounded-t"></div>
+                                                            <div class="w-3 bg-blue-300 rounded-t mt-1"
+                                                                style="height: 58%"></div>
+                                                            <div class="text-xs text-gray-500 mt-1">May</div>
+                                                        </div>
+                                                        <!-- June -->
+                                                        <div class="flex flex-col items-center" style="height: 80%">
+                                                            <div class="w-3 bg-red-400 rounded-t"></div>
+                                                            <div class="w-3 bg-red-300 rounded-t mt-1"
+                                                                style="height: 62%"></div>
+                                                            <div class="text-xs text-gray-500 mt-1">Jun</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 flex justify-center space-x-4">
+                                                    <div class="flex items-center">
+                                                        <div class="w-3 h-3 bg-blue-400 rounded-full mr-1"></div>
+                                                        <span class="text-xs text-gray-600">Systolic</span>
+                                                    </div>
+                                                    <div class="flex items-center">
+                                                        <div class="w-3 h-3 bg-blue-300 rounded-full mr-1"></div>
+                                                        <span class="text-xs text-gray-600">Diastolic</span>
+                                                    </div>
+                                                    <div class="flex items-center">
+                                                        <div class="w-3 h-3 bg-red-400 rounded-full mr-1"></div>
+                                                        <span class="text-xs text-gray-600">Elevated</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Recommendations -->
+                                        <div>
+                                            <h4 class="text-sm font-medium text-gray-900 mb-2">Recommended Actions</h4>
+                                            <ul class="space-y-3">
+                                                <li class="flex items-start">
+                                                    <div class="flex-shrink-0 h-5 w-5 text-green-500 mt-0.5">
+                                                        <i class="fas fa-check-circle"></i>
+                                                    </div>
+                                                    <p class="ml-2 text-sm text-gray-700">
+                                                        <span class="font-medium">Reduce sodium intake</span> - Aim for
+                                                        less than 1,500mg per day to help lower blood pressure.
+                                                    </p>
+                                                </li>
+                                                <li class="flex items-start">
+                                                    <div class="flex-shrink-0 h-5 w-5 text-green-500 mt-0.5">
+                                                        <i class="fas fa-check-circle"></i>
+                                                    </div>
+                                                    <p class="ml-2 text-sm text-gray-700">
+                                                        <span class="font-medium">Increase physical activity</span> - 30
+                                                        minutes of moderate exercise 5 days per week can help.
+                                                    </p>
+                                                </li>
+                                                <li class="flex items-start">
+                                                    <div class="flex-shrink-0 h-5 w-5 text-yellow-500 mt-0.5">
+                                                        <i class="fas fa-exclamation-circle"></i>
+                                                    </div>
+                                                    <p class="ml-2 text-sm text-gray-700">
+                                                        <span class="font-medium">Schedule follow-up</span> - Consider
+                                                        seeing your doctor within the next 2 weeks.
+                                                    </p>
+                                                </li>
+                                                <li class="flex items-start">
+                                                    <div class="flex-shrink-0 h-5 w-5 text-blue-500 mt-0.5">
+                                                        <i class="fas fa-info-circle"></i>
+                                                    </div>
+                                                    <p class="ml-2 text-sm text-gray-700">
+                                                        <span class="font-medium">Monitor at home</span> - Track your
+                                                        blood pressure twice daily and log in the app.
+                                                    </p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right column (1/3 width) -->
+                        <div class="space-y-6">
+                            <!-- Medication reminders -->
+                            <div id="medication-reminders">
+                                <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                    <i class="fas fa-pills text-medivault-blue mr-2"></i>
+                                    Medication Reminders
+                                </h2>
+
+                                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                            Today's Medications
+                                        </h3>
+                                        <p class="mt-1 text-sm text-gray-500">
+                                            Your scheduled medications for today
+                                        </p>
+                                    </div>
+                                    <div class="bg-white px-4 py-5 sm:p-6">
+                                        <!-- Active medication -->
+                                        <div class="mb-6">
+                                            <div class="flex items-start justify-between">
+                                                <div>
+                                                    <h4 class="text-sm font-medium text-gray-900">Lisinopril</h4>
+                                                    <p class="text-xs text-gray-500">20mg tablet • For high blood
+                                                        pressure</p>
+                                                </div>
+                                                <span
+                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    Active
+                                                </span>
+                                            </div>
+                                            <div class="mt-3 medication-time p-3 rounded-lg">
+                                                <div class="flex items-center justify-between">
+                                                    <div>
+                                                        <p class="text-xs font-medium text-gray-500">Next Dose</p>
+                                                        <p class="text-sm font-semibold">8:00 PM <span
+                                                                class="font-normal text-gray-500">(in 2h 15m)</span></p>
+                                                    </div>
+                                                    <div class="flex space-x-2">
+                                                        <button
+                                                            class="inline-flex items-center p-1 border border-gray-300 rounded-full shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                                            <i class="fas fa-bell-slash h-4 w-4"></i>
+                                                        </button>
+                                                        <button
+                                                            class="inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-medivault-blue hover:bg-medivault-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                                            <i class="fas fa-check h-4 w-4"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 flex items-center justify-between text-xs">
+                                                <span class="text-gray-500">2 of 30 remaining</span>
+                                                <button
+                                                    class="text-medivault-blue hover:text-medivault-dark font-medium">
+                                                    <i class="fas fa-plus-circle mr-1"></i>
+                                                    Request Refill
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Completed medication -->
+                                        <div class="mb-6">
+                                            <div class="flex items-start justify-between">
+                                                <div>
+                                                    <h4 class="text-sm font-medium text-gray-900">Atorvastatin</h4>
+                                                    <p class="text-xs text-gray-500">40mg tablet • For cholesterol</p>
+                                                </div>
+                                                <span
+                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    Taken
+                                                </span>
+                                            </div>
+                                            <div class="mt-3 p-3 rounded-lg bg-gray-50">
+                                                <div class="flex items-center justify-between">
+                                                    <div>
+                                                        <p class="text-xs font-medium text-gray-500">Last Taken</p>
+                                                        <p class="text-sm font-semibold">8:00 AM</p>
+                                                    </div>
+                                                    <div class="text-xs text-gray-500">
+                                                        <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                                                        Confirmed
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 flex items-center justify-between text-xs">
+                                                <span class="text-gray-500">28 of 30 remaining</span>
+                                                <button class="text-gray-500 hover:text-gray-700">
+                                                    <i class="fas fa-info-circle mr-1"></i>
+                                                    Details
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Refill needed -->
+                                        <div>
+                                            <div class="flex items-start justify-between">
+                                                <div>
+                                                    <h4 class="text-sm font-medium text-gray-900">Metformin</h4>
+                                                    <p class="text-xs text-gray-500">500mg tablet • For type 2 diabetes
+                                                    </p>
+                                                </div>
+                                                <span
+                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                    Refill Needed
+                                                </span>
+                                            </div>
+                                            <div class="mt-3 p-3 rounded-lg bg-yellow-50">
+                                                <div class="flex items-center justify-between">
+                                                    <div>
+                                                        <p class="text-xs font-medium text-gray-700">Next Dose</p>
+                                                        <p class="text-sm font-semibold">8:00 PM</p>
+                                                    </div>
+                                                    <div class="text-xs font-medium text-yellow-700">
+                                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                                        Last 3 doses
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 flex items-center justify-between text-xs">
+                                                <span class="text-gray-500">3 of 30 remaining</span>
+                                                <button
+                                                    class="text-medivault-blue hover:text-medivault-dark font-medium">
+                                                    <i class="fas fa-plus-circle mr-1"></i>
+                                                    Request Refill
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Wellness tips -->
+                            <div id="wellness-tips">
+                                <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                    <i class="fas fa-heart text-medivault-blue mr-2"></i>
+                                    Wellness Tips
+                                </h2>
+
+                                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                            Personalized Suggestions
+                                        </h3>
+                                        <p class="mt-1 text-sm text-gray-500">
+                                            Small changes for better health
+                                        </p>
+                                    </div>
+                                    <div class="bg-white px-4 py-5 sm:p-6">
+                                        <ul class="space-y-4">
+                                            <li class="flex items-start">
+                                                <div
+                                                    class="flex-shrink-0 h-6 w-6 rounded-full bg-medivault-light flex items-center justify-center">
+                                                    <i class="fas fa-tint text-medivault-blue text-xs"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <h4 class="text-sm font-medium text-gray-900">Increase Water Intake
+                                                    </h4>
+                                                    <p class="mt-1 text-xs text-gray-500">You've been averaging 5
+                                                        cups/day. Aim for 8-10 cups to improve hydration.</p>
+                                                </div>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <div
+                                                    class="flex-shrink-0 h-6 w-6 rounded-full bg-medivault-light flex items-center justify-center">
+                                                    <i class="fas fa-moon text-medivault-blue text-xs"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <h4 class="text-sm font-medium text-gray-900">Improve Sleep Routine
+                                                    </h4>
+                                                    <p class="mt-1 text-xs text-gray-500">Your sleep tracker shows
+                                                        inconsistent bedtimes. Try going to bed within 30 minutes of the
+                                                        same time each night.</p>
+                                                </div>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <div
+                                                    class="flex-shrink-0 h-6 w-6 rounded-full bg-medivault-light flex items-center justify-center">
+                                                    <i class="fas fa-walking text-medivault-blue text-xs"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <h4 class="text-sm font-medium text-gray-900">Take Movement Breaks
+                                                    </h4>
+                                                    <p class="mt-1 text-xs text-gray-500">You've been sitting for long
+                                                        periods. Set a reminder to stand and stretch every hour.</p>
+                                                </div>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <div
+                                                    class="flex-shrink-0 h-6 w-6 rounded-full bg-medivault-light flex items-center justify-center">
+                                                    <i class="fas fa-apple-alt text-medivault-blue text-xs"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <h4 class="text-sm font-medium text-gray-900">Add More Vegetables
+                                                    </h4>
+                                                    <p class="mt-1 text-xs text-gray-500">Your food log shows low
+                                                        vegetable intake. Try adding one serving to each meal.</p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Virtual care -->
+                            <div id="virtual-care">
+                                <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                    <i class="fas fa-video text-medivault-blue mr-2"></i>
+                                    Virtual Care
+                                </h2>
+
+                                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                            Quick Access to Care
+                                        </h3>
+                                        <p class="mt-1 text-sm text-gray-500">
+                                            Connect with your providers online
+                                        </p>
+                                    </div>
+                                    <div class="bg-white px-4 py-5 sm:p-6">
+                                        <div class="text-center">
+                                            <div
+                                                class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-medivault-light">
+                                                <i class="fas fa-user-md text-medivault-blue text-xl"></i>
+                                            </div>
+                                            <h3 class="mt-2 text-sm font-medium text-gray-900">Need to see a doctor?
+                                            </h3>
+                                            <p class="mt-1 text-sm text-gray-500">
+                                                Schedule a virtual visit with your provider or find available urgent
+                                                care.
+                                            </p>
+                                            <div class="mt-6">
+                                                <button type="button"
+                                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-medivault-blue hover:bg-medivault-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medivault-blue">
+                                                    <i class="fas fa-calendar-plus mr-2"></i>
+                                                    Book Appointment
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="mt-6 border-t border-gray-200 pt-6">
+                                            <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Available Providers</h4>
+                                            <ul class="mt-3 space-y-2">
+                                                <li class="flex items-center justify-between text-sm">
+                                                    <div class="flex items-center">
+                                                        <div
+                                                            class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                                                            <i class="fas fa-user-md text-gray-500"></i>
+                                                        </div>
+                                                        <div class="ml-3">
+                                                            <p class="font-medium text-gray-900">Dr. Moksh</p>
+                                                            <p class="text-gray-500">Primary Care</p>
+                                                        </div>
+                                                    </div>
+                                                    <span class="text-xs font-medium text-gray-500">Next:
+                                                        Tomorrow</span>
+                                                </li>
+                                                <li class="flex items-center justify-between text-sm">
+                                                    <div class="flex items-center">
+                                                        <div
+                                                            class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                                                            <i class="fas fa-user-md text-gray-500"></i>
+                                                        </div>
+                                                        <div class="ml-3">
+                                                            <p class="font-medium text-gray-900">Dr. Laavanya</p>
+                                                            <p class="text-gray-500">Cardiology</p>
+                                                        </div>
+                                                    </div>
+                                                    <span class="text-xs font-medium text-gray-500">Next: June 22</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            
+            
+
+    <script>
+        // Set current date
+        const options = {year: 'numeric', month: 'long', day: 'numeric'};
+        const today = new Date();
+        document.getElementById('current-date').textContent = today.toLocaleDateString('en-US', options);
+
+        // Simple medication reminder toggle
+        document.addEventListener('DOMContentLoaded', function () {
+            const snoozeButtons = document.querySelectorAll('.fa-bell-slash').forEach(icon => {
+                icon.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const parentButton = this.closest('button');
+                    parentButton.innerHTML = '<i class="fas fa-bell h-4 w-4"></i>';
+                    parentButton.classList.remove('text-gray-700');
+                    parentButton.classList.add('text-yellow-500');
+
+                    // Show a temporary alert
+                    alert('Reminder snoozed for 1 hour');
+                });
+            });
+
+            // Simulate taking medication
+            const takeButtons = document.querySelectorAll('.fa-check').forEach(icon => {
+                icon.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const medicationCard = this.closest('.medication-time');
+                    medicationCard.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-medium text-gray-500">Taken at</p>
+                                <p class="text-sm font-semibold">${new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</p>
+                            </div>
+                            <div class="text-xs text-green-500">
+                                <i class="fas fa-check-circle mr-1"></i>
+                                Confirmed
+                            </div>
+                        </div>
+                    `;
+                    medicationCard.classList.remove('medication-time');
+                    medicationCard.classList.add('bg-green-50');
+
+                    // Update status badge
+                    const statusBadge = this.closest('.mb-6').querySelector('.bg-green-100');
+                    if (statusBadge) {
+                        statusBadge.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Taken';
+                    }
+                });
+            });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // Close mobile menu if open (you may need to add this functionality)
+                        // document.getElementById('mobile-menu').classList.add('hidden');
+
+                        // Scroll to the target element
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+
+                        // Update URL without page reload
+                        history.pushState(null, null, targetId);
+
+                        // Update active nav item
+                        updateActiveNavItem(targetId);
+                    }
+                });
+            });
+
+            // Function to update active navigation item
+            function updateActiveNavItem(targetId) {
+                // Remove active class from all nav items
+                document.querySelectorAll('.space-y-1 a').forEach(link => {
+                    link.classList.remove('nav-item-active');
+                    link.classList.add('text-gray-600', 'hover:bg-gray-50', 'hover:text-gray-900');
+                });
+
+                // Add active class to clicked nav item
+                const activeLink = document.querySelector(`.space-y-1 a[href="${targetId}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('nav-item-active');
+                    activeLink.classList.remove('text-gray-600', 'hover:bg-gray-50', 'hover:text-gray-900');
+                }
+            }
+
+            // Highlight nav item based on scroll position
+            window.addEventListener('scroll', function () {
+                const sections = document.querySelectorAll('[id]');
+                let currentSection = '';
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+
+                    if (pageYOffset >= (sectionTop - 100)) {
+                        currentSection = '#' + section.getAttribute('id');
+                    }
+                });
+
+                updateActiveNavItem(currentSection);
+            });
+        });
+    </script>
+    <script async type='module'
+        src='https://interfaces.zapier.com/assets/web-components/zapier-interfaces/zapier-interfaces.esm.js'></script>
+    <zapier-interfaces-chatbot-embed is-popup='true'
+        chatbot-id='cmabfjxa2006x1njs1a1bq1s6'></zapier-interfaces-chatbot-embed>
+</body>
+
+</html>
